@@ -50,95 +50,53 @@ const gallery = [
         comments: "1.3K",
         category: "Project"
     },
+];
+
+const gallery2 = [
+    {
+        id: 1,
+        img: smallImage1,
+        title: "Glasses and laptop from above",
+        auther: "Ron Mackie",
+        likes: "2.2K",
+        comments: "1.3K",
+        category: "Project"
+    },
+    {
+        id: 2,
+        img: smallImage2,
+        title: "Working at a coffee shop",
+        auther: "Nancy Martino",
+        likes: "2.2K",
+        comments: "1.3K",
+        category: "Project"
+    },
+    {
+        id: 3,
+        img: smallImage3,
+        title: "Photo was taken in Beach",
+        auther: "Elwood Arter",
+        likes: "2.2K",
+        comments: "1.3K",
+        category: "Project"
+    },
     {
         id: 4,
-        img: smallImage4,
-        title: "Drawing a sketch",
-        auther: "Jason McQuaid",
+        img: smallImage3,
+        title: "Photo was taken in Beach",
+        auther: "Elwood Arter",
         likes: "2.2K",
         comments: "1.3K",
         category: "Project"
     },
     {
         id: 5,
-        img: smallImage5,
-        title: "Working from home little spot",
-        auther: "Henry Baird",
+        img: smallImage3,
+        title: "Photo was taken in Beach",
+        auther: "Elwood Arter",
         likes: "2.2K",
         comments: "1.3K",
         category: "Project"
-    },
-    {
-        id: 6,
-        img: smallImage6,
-        title: "Glasses and laptop from above",
-        auther: "Erica Kernan",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Designing"
-    },
-    {
-        id: 7,
-        img: smallImage7,
-        title: "Sunrise above a beach",
-        auther: "James Ballard",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Development"
-    },
-    {
-        id: 8,
-        img: smallImage8,
-        title: "Project discussion with team",
-        auther: "Ruby Griffin",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Designing"
-    },
-    {
-        id: 9,
-        img: smallImage9,
-        title: "Dramatic clouds at the Golden Gate Bridge",
-        auther: "Ron Mackie",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Photography"
-    },
-    {
-        id: 10,
-        img: smallImage10,
-        title: "Fun day at the Hill Station",
-        auther: "Henry Baird",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Development"
-    },
-    {
-        id: 11,
-        img: smallImage11,
-        title: "Cycling in the countryside",
-        auther: "Nancy Martino",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Designing"
-    },
-    {
-        id: 12,
-        img: smallImage12,
-        title: "A mix of friends and strangers heading off to find an adventure.",
-        auther: "Erica Kernan",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Designing"
-    },
-    {
-        id: 13,
-        img: smallImage8,
-        title: "Project discussion with team",
-        auther: "Ruby Griffin",
-        likes: "2.2K",
-        comments: "1.3K",
-        category: "Photography"
     },
 ];
 
@@ -1062,4 +1020,4 @@ const team = [
 ];
 
 
-export { gallery, pricing1, pricing2, pricing3, projects, documents, SearchGallery, news, video, swiper, team };
+export { gallery, pricing1, pricing2, pricing3, projects, documents, SearchGallery, news, video, swiper, team, gallery2 };
