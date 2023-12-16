@@ -165,7 +165,7 @@ const RightSidebar = (props) => {
                 </div>
                 <Offcanvas isOpen={open} toggle={toggleLeftCanvas} direction='end'>
                     <OffcanvasHeader className="d-flex align-items-center bg-primary bg-gradient p-3 offcanvas-header-dark" toggle={toggleLeftCanvas}>
-                        <span className="m-0 me-2 text-white">Theme Customizer</span>
+                        <span className="m-0 me-2 text-white">Change Theme</span>
                     </OffcanvasHeader>
                     <OffcanvasBody className="p-0">
                         <SimpleBar className="h-100">

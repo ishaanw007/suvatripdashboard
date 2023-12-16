@@ -407,7 +407,7 @@ const Promotions = () => {
                 </CardHeader>
                 <div className="card-body pt-0 bg-white">
                   <div>
-                    {isCustomerSuccess && customers.length ? (
+                    {isCustomerSuccess && customers?.length ? (
                       <TableContainerPromotions
                         columns={columns}
                         data={(customers || [])}

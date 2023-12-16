@@ -14,7 +14,8 @@ import { useFormik } from "formik";
 // actions
 import { loginUser, socialLogin, resetLoginFlag } from "../../slices/thunks";
 
-import logoLight from "../../assets/images/logo-light.png";
+// import logoLight from "../../assets/images/logo-light.png";
+import logoLight from "../../assets/images/logoBlack 1.png";
 import { createSelector } from 'reselect';
 //import images
 
@@ -56,8 +57,8 @@ const Login = (props) => {
         enableReinitialize: true,
 
         initialValues: {
-            email: userLogin.email || "admin@themesbrand.com" || '',
-            password: userLogin.password || "123456" || '',
+            email: userLogin.email || "vendor@suvatrip.com" || '',
+            password: userLogin.password || "ishaan" || '',
         },
         validationSchema: Yup.object({
             email: Yup.string().required("Please Enter Your Email"),
@@ -88,7 +89,7 @@ const Login = (props) => {
             }, 3000);
         }
     }, [dispatch, errorMsg]);
-    document.title = "Basic SignIn | Velzon - React Admin & Dashboard Template";
+    document.title = "Suva Trip Login";
     return (
         <React.Fragment>
             <ParticlesAuth>
@@ -99,10 +100,10 @@ const Login = (props) => {
                                 <div className="text-center mt-sm-5 mb-4 text-white-50">
                                     <div>
                                         <Link to="/" className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="20" />
+                                            <img src={logoLight} alt="" height="30" />
                                         </Link>
                                     </div>
-                                    <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
+                                    {/* <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p> */}
                                 </div>
                             </Col>
                         </Row>
@@ -113,7 +114,7 @@ const Login = (props) => {
                                     <CardBody className="p-4">
                                         <div className="text-center mt-2">
                                             <h5 className="text-primary">Welcome Back !</h5>
-                                            <p className="text-muted">Sign in to continue to Velzon.</p>
+                                            <p className="text-muted">Sign in to continue to Suva Trip.</p>
                                         </div>
                                         {error && error ? (<Alert color="danger"> {error} </Alert>) : null}
                                         <div className="p-2 mt-4">
@@ -169,13 +170,13 @@ const Login = (props) => {
                                                     </div>
                                                 </div>
 
-                                                <div className="form-check">
-                                                    <Input className="form-check-input" type="checkbox" value="" id="auth-remember-check" />
-                                                    <Label className="form-check-label" htmlFor="auth-remember-check">Remember me</Label>
-                                                </div>
+                                                {/* <div className="form-check"> */}
+                                                    {/* <Input className="form-check-input" type="checkbox" value="" id="auth-remember-check" /> */}
+                                                    {/* <Label className="form-check-label" htmlFor="auth-remember-check">Remember me</Label> */}
+                                                {/* </div> */}
 
                                                 <div className="mt-4">
-                                                    <Button color="success" disabled={error ? null : loading ? true : false} className="btn btn-success w-100" type="submit">
+                                                    <Button color="primary" disabled={error ? null : loading ? true : false} className="btn btn-primary w-100" type="submit">
                                                         {loading ? <Spinner size="sm" className='me-2'> Loading... </Spinner> : null}
                                                         Sign In
                                                     </Button>
@@ -206,8 +207,8 @@ const Login = (props) => {
                                                         >
                                                             <i className="ri-google-fill fs-16" />
                                                         </Link>
-                                                        <Button color="dark" className="btn-icon"><i className="ri-github-fill fs-16"></i></Button>{" "}
-                                                        <Button color="info" className="btn-icon"><i className="ri-twitter-fill fs-16"></i></Button>
+                                                        {/* <Button color="dark" className="btn-icon"><i className="ri-github-fill fs-16"></i></Button>{" "} */}
+                                                        {/* <Button color="info" className="btn-icon"><i className="ri-twitter-fill fs-16"></i></Button> */}
                                                     </div>
                                                 </div>
                                             </Form>

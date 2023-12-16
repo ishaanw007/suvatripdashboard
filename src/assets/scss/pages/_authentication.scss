@@ -36,8 +36,8 @@
     background-size: cover;
 
     .bg-overlay{
-        background: linear-gradient(to right, darken($primary, 6%), $primary);
-        opacity: 0.9;
+        background: linear-gradient(to right, white, $primary);
+        opacity: 1;
     }
 }
 

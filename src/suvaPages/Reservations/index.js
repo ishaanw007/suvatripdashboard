@@ -394,7 +394,7 @@ const Reservations = () => {
                 </CardHeader>
                 <div className="card-body pt-0 bg-white">
                   <div>
-                    {isCustomerSuccess && customers.length ? (
+                    {isCustomerSuccess && customers?.length ? (
                       <TableContainerReservations
                         columns={columns}
                         data={(customers || [])}

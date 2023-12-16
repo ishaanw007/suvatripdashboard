@@ -15,7 +15,7 @@ const Logout = (props) => {
 
 
   const logoutData = createSelector(
-    (state) => state.Dashboard.productOverviewChart,
+    (state) => state.Login.isUserLogout,
     (isUserLogout) => isUserLogout
   );
   // Inside your component

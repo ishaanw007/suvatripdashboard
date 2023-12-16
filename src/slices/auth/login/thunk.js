@@ -20,7 +20,8 @@ export const loginUser = (user, history) => async (dispatch) => {
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       response = postJwtLogin({
         email: user.email,
-        password: user.password
+        password: user.password,
+        role:"vendor"
       });
 
     } else if (process.env.REACT_APP_DEFAULTAUTH) {
@@ -40,13 +41,13 @@ export const loginUser = (user, history) => async (dispatch) => {
         data = finallogin.data;
         if (finallogin.status === "success") {
           dispatch(loginSuccess(data));
-          history('/dashboard')
+          history('/dashboard-home')
         } else {
           dispatch(apiError(finallogin));
         }
       } else {
         dispatch(loginSuccess(data));
-        history('/dashboard')
+        history('/dashboard-home')
       }
     }
   } catch (error) {
