@@ -60,6 +60,7 @@ const UserProfile = () => {
       if (!isEmpty(user)) {
         obj.data.first_name = user.first_name;
         sessionStorage.removeItem("authUser");
+        console.log(obj, '22222222');
         sessionStorage.setItem("authUser", JSON.stringify(obj));
       }
 

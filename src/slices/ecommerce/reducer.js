@@ -107,7 +107,7 @@ const EcommerceSlice = createSlice({
     });
 
     builder.addCase(getCustomers.rejected, (state, action) => {
-      state.error = action.payload.error || null;
+      state.error = action || null;
       state.isCustomerCreated = false;
       state.isCustomerSuccess = false;
     });

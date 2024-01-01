@@ -1,6 +1,9 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
+import AdminDashbaord from "../suvaPages/adminPages/Dashboard"
+import AdminHotels from "../suvaPages/adminPages/Reservations"
+
 //SuvaTrip////////////////////////////////////////////
 import MainDashbaord from "../suvaPages/Dashboard"
 import Inbox from "../suvaPages/Inbox"
@@ -279,34 +282,33 @@ import UiLink from "../pages/BaseUi/UiLinks/UiLinks";
 
 const authProtectedRoutes = [
 
-//Suva Trip Routes//////////////////////////////////////////////////
-{ path: "/dashboard-home", component: <MainDashbaord /> },
-{ path: "/inbox", component: <Inbox /> },
-{ path: "/promotions", component: <Promotions /> },
-{ path: "/reviews", component: <Reviews /> },
-{ path: "/reservations", component: <Reservations /> },
-{ path: "/property/ammenities", component: <Ammenities /> },
-{ path: "/property/description", component: <Description /> },
-{ path: "/property/facilities", component: <Facilities /> },
-{ path: "/property/general-info", component: <GeneralInfo /> },
-{ path: "/property/photos", component: <Photos /> },
-{ path: "/property/policy", component: <Policy /> },
-{ path: "/property/details", component: <Details /> },
-{ path: "/property/vat-tax-charges", component: <VAT /> },
-{ path: "/rates-availibility/calender", component: <BookingCalender /> },
-{ path: "/rates-availibility/rateplan", component: <RatePlan /> },
-{ path: "/finance/financeoverview", component: <FinanceOverview /> },
-{ path: "/finance/invoice", component: <Invoice /> },
-{ path: "/finance/reservationstatement", component: <ReservationStatement /> },
+  //Suva Trip Routes//////////////////////////////////////////////////
+  { path: "/vendor/dashboard-home", component: <MainDashbaord /> },
+  { path: "/vendor/inbox", component: <Inbox /> },
+  { path: "/vendor/promotions", component: <Promotions /> },
+  { path: "/vendor/reviews", component: <Reviews /> },
+  { path: "/vendor/reservations", component: <Reservations /> },
+  { path: "/vendor/property/ammenities", component: <Ammenities /> },
+  { path: "/vendor/property/description", component: <Description /> },
+  { path: "/vendor/property/facilities", component: <Facilities /> },
+  { path: "/vendor/property/general-info", component: <GeneralInfo /> },
+  { path: "/vendor/property/photos", component: <Photos /> },
+  { path: "/vendor/property/policy", component: <Policy /> },
+  { path: "/vendor/property/details", component: <Details /> },
+  { path: "/vendor/property/vat-tax-charges", component: <VAT /> },
+  { path: "/vendor/rates-availibility/calender", component: <BookingCalender /> },
+  // { path: "/rates-availibility/rateplan", component: <RatePlan /> },
+  { path: "/vendor/finance/financeoverview", component: <FinanceOverview /> },
+  { path: "/vendor/finance/invoice", component: <Invoice /> },
+  { path: "/vendor/finance/reservationstatement", component: <ReservationStatement /> },
 
 
-//Suva Trip Routes//////////////////////////////////////////////////
+  //ADMIN Routes//////////////////////////////////////////////////
 
+  { path: "/admin/dashboard-home", component: <AdminDashbaord /> },
+  { path: "/admin/hotels", component: <AdminHotels /> },
 
-
-
-
-
+  //Suva Trip Routes//////////////////////////////////////////////////
 
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
   { path: "/dashboard-crm", component: <DashboardCrm /> },
@@ -519,9 +521,9 @@ const authProtectedRoutes = [
   {
     path: "/",
     exact: true,
-    component: <Navigate to="/dashboard-home" />,
+    component: <Navigate to="/vendor/dashboard-home" />,
   },
-  { path: "*", component: <Navigate to="/dashboard-home" /> },
+  { path: "*", component: <Navigate to="/vendor/dashboard-home" /> },
 ];
 
 const publicRoutes = [
@@ -563,4 +565,24 @@ const publicRoutes = [
 
 ];
 
-export { authProtectedRoutes, publicRoutes };
+let routes = [];
+
+if (sessionStorage.getItem('authUser')) {
+  if (JSON.parse(sessionStorage.getItem('authUser')).role === 'vendor') {
+    authProtectedRoutes.forEach((x) => {
+      if (x.path.includes('vendor')) {
+        routes.push(x)
+      }
+    })
+  } else if (JSON.parse(sessionStorage.getItem('authUser')).role === 'admin') {
+    authProtectedRoutes.forEach((x) => {
+      if (x.path.includes('admin')) {
+        routes.push(x)
+      }
+    })
+  }
+} else {
+  routes = authProtectedRoutes
+}
+
+export { routes, publicRoutes };

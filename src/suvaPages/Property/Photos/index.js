@@ -5,15 +5,40 @@ import classnames from "classnames";
 import Flatpickr from "react-flatpickr";
 import { gallery } from '../../../common/data';
 import Masonry from 'react-masonry-component';
+import { useEffect } from 'react';
 
 //import images
 import progileBg from '../../../assets/images/profile-bg.jpg';
 import avatar1 from '../../../assets/images/users/avatar-1.jpg';
 
+import {
+  getPhotos as onGetPhotos,
+} from "../../../slices/thunks";
+import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from 'reselect';
+
 const Photos = () => {
+  const dispatch = useDispatch();
+
+  const [isChecked, setIsChecked] = useState([]);
+  const [deleteData, setDeleteData] = useState([]);
+
+  const selectLayoutState = (state) => state.Property;
+  const propertyPhotosProperties = createSelector(
+    selectLayoutState,
+    (property) => ({
+      photos: property.photos,
+    })
+  );
+
+  const {
+    photos
+  } = useSelector(propertyPhotosProperties)
+
   const [activeTab, setActiveTab] = useState("1");
   const [displayCategory, setCategory] = useState("All");
   const [index, setIndex] = useState(-1);
+  const [images, setImages] = useState([])
 
   const filterGallery = ({ category }) => {
     return (
@@ -26,6 +51,28 @@ const Photos = () => {
   const tabChange = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
+
+  useEffect(() => {
+    dispatch(onGetPhotos());
+  }, [])
+
+  useEffect(() => {
+    if(photos.length>0) {
+      photos.forEach(el => {
+        setIsChecked(pValue => {
+          return [
+            ...pValue,
+            false
+          ]
+        })
+      });
+      setImages(photos)
+    }
+  }, [photos])
+
+  useEffect(() => {
+    console.log(images, 'iiiii');
+  }, [images])
 
   document.title = "Profile Settings | Velzon - React Admin & Dashboard Template";
 
@@ -50,7 +97,7 @@ const Photos = () => {
                         All Photos
                       </NavLink>
                     </NavItem>
-                    <NavItem>
+                    {/* <NavItem>
                       <NavLink to="#"
                         className={classnames({ active: activeTab === "2" })}
                         onClick={() => {
@@ -60,7 +107,7 @@ const Photos = () => {
                         <i className="far fa-user"></i>
                         Units With Missing Photos
                       </NavLink>
-                    </NavItem>
+                    </NavItem> */}
                   </Nav>
                 </CardHeader>
                 <CardBody className="p-4">
@@ -70,21 +117,30 @@ const Photos = () => {
                       <div className='d-flex justify-content-between mb-4'>
                         <Button color="danger"> Add Photos </Button>
                         <div className='d-flex'>
-                          <Button color="primary" outline className="btn btn-ghost-primary">Discard All</Button>
-                          <Button color="primary" outline className="btn btn-ghost-primary ms-2">Hide From Gallery</Button>
+                          {/* <Button color="primary" outline className="btn btn-ghost-primary">Discard All</Button>
+                          <Button color="primary" outline className="btn btn-ghost-primary ms-2">Hide From Gallery</Button> */}
                           <Button color="primary" outline className="btn btn-ghost-primary ms-2">Delete</Button>
                         </div>
                       </div>
                       <Masonry className="row gallery-wrapper">
-                        {filteredGallery.map(({ img, title, id, auther, likes, comments }, key) => (
+                      {images.length>0 && images.map((image, key) => (
                           <Col xxl={3} xl={3} sm={6} className="element-item project designing development" key={key}>
-                            <Card className="gallery-box">
+                            <Card className={isChecked[key]===true ? "gallery-box p-0" : "gallery-box border-0"}>
                               <div className="gallery-container">
-                                <Link className="image-popup" to="#" title={title} onClick={() => setIndex(key)}>
-                                  <img className="gallery-img img-fluid mx-auto" src={img} alt="" />
-                                  <div className="gallery-overlay d-flex flex-column justify-content-between align-items-start">
-                                    <input type="radio" id={`radio-${id}`} name={`radio-${id}`} value={`radio-${id}`} />
-                                    <h5 className="overlay-caption">{title}</h5>
+                                <Link className="image-popup" to="#" onClick={() => {
+                                  let checkedValues = [...isChecked]
+                                  checkedValues[key] = !checkedValues[key]
+                                  setDeleteData(pValue => {
+                                    return [
+                                      ...pValue,
+                                      image.link
+                                    ]
+                                  })
+                                  setIsChecked(checkedValues)
+                                }}>
+                                  <img className="gallery-img img-fluid mx-auto bg-white" src={image.link} alt="photo" />
+                                  <div className={isChecked[key]===true ? "gallery-overlay d-flex flex-column justify-content-between align-items-start opacity-100 visible" : "gallery-overlay d-flex flex-column justify-content-between align-items-start"}>
+                                    <input type="radio" id={`radio-${key}`} name={`radio-${key}`} value={image.link} checked={isChecked[key]} />
                                   </div>
                                 </Link>
                               </div>
@@ -104,15 +160,14 @@ const Photos = () => {
                         </div>
                       </div>
                       <Masonry className="row gallery-wrapper">
-                        {filteredGallery.map(({ img, title, id, auther, likes, comments }, key) => (
+                        {images.length>0 && images.map(({ link, title, id, auther, likes, comments }, key) => (
                           <Col xxl={3} xl={3} sm={6} className="element-item project designing development" key={key}>
                             <Card className="gallery-box">
                               <div className="gallery-container">
-                                <Link className="image-popup" to="#" title={title} onClick={() => setIndex(key)}>
-                                  <img className="gallery-img img-fluid mx-auto" src={img} alt="" />
+                                <Link className="image-popup" to="#" onClick={() => setIndex(key)}>
+                                  <img className="gallery-img img-fluid mx-auto" src={link} alt="" />
                                   <div className="gallery-overlay d-flex flex-column justify-content-between align-items-start">
-                                    <input type="radio" id={`radio-${id}`} name={`radio-${id}`} value={`radio-${id}`} />
-                                    <h5 className="overlay-caption">{title}</h5>
+                                    <input type="radio" id={`radio-${key}`} name={`radio-${key}`} value={`radio-${key}`} />
                                   </div>
                                 </Link>
                               </div>

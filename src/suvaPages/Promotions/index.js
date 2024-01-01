@@ -419,7 +419,7 @@ const Promotions = () => {
                         isCustomerFilter={false}
                         SearchPlaceholder='Search for customer, email, phone, status or something...'
                       />
-                    ) : (<Loader error={error} />)
+                    ) : (<h4 className="mt-3 text-center">No promotions found!</h4>)
                     }
                   </div>
                   <Modal id="showModal" isOpen={modal} toggle={toggle} centered>

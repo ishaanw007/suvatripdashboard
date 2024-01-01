@@ -55,9 +55,54 @@ export const postJwtRegister = (url, data) => {
     });
 };
 
+export const getInfo = id => api.get(url.GET_HOTEL_BY_ID + '?fields=propertyName,address,latitude,longitude,city,country,', {headers: {authorization: sessionStorage.getItem('authUser').token}});
+
+export const getDescription = id => api.get(url.GET_HOTEL_BY_ID  + '/' + '?fields=description,', {headers: {authorization: sessionStorage.getItem('authUser').token}});
+
+export const getPhotos = id => api.get(url.GET_HOTEL_BY_ID  + '/' + '?fields=propertyPicture,roomPicture,areaPicture,', {headers: {authorization: sessionStorage.getItem('authUser').token}});
+
+export const getFacilities = id => api.get(url.GET_HOTEL_BY_ID  + '/' + '?fields=facilities,', {headers: {authorization: sessionStorage.getItem('authUser').token}});
+
+export const updateHotel = (id, data) => api.update(url.UPDATE_HOTEL  + '/' + id, data, {headers: {authorization: sessionStorage.getItem('authUser').token}});
+
+export const getAmmenities = id => api.get(url.GET_HOTEL_BY_ID  + '/' + '?fields=ammenities,', {headers: {authorization: sessionStorage.getItem('authUser').token}});
+
+export const getRooms = id => api.get(url.ROOMS  + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const getRoomPhotos = id => api.get(url.GET_HOTEL_BY_ID  + '/' + '?fields=roomPicture,', {headers: {authorization: sessionStorage.getItem('authUser').token}});
+
+export const addRoom = (data) => api.create(url.ROOMS, data, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const updateRooms = (id, data) => api.update(url.ROOMS  + '/' + id, data, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const deleteRoom = (id) => api.delete(url.ROOMS  + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const getReservations = id => api.get(url.RESERVATION  + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const addReservation = (data) => api.create(url.RESERVATION, data, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const updateReservations = (id, data) => api.update(url.RESERVATION  + '/' + id, data, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const deleteReservation = (id) => api.delete(url.RESERVATION  + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const getPromotions = id => api.get(url.PROMOTION  + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const addPromotion = (data) => api.create(url.PROMOTION, data, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const updatePromotions = (id, data) => api.update(url.PROMOTION  + '/' + id, data, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const deletePromotion = (id) => api.delete(url.PROMOTION  + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const getReviews = (id, filter) => api.get(url.REVIEWS  + '/' + id + '?filter=' + filter + ',', {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const getChats = id => api.get(url.INBOX  + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const getAllChats = id => api.get(url.INBOX  + '/get-by-id' + '/' + id, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
+export const addChat = (data) => api.create(url.INBOX, data, {headers: {authorization: sessionStorage.getItem('authUser').token}} );
+
 // Login Method
-export const postJwtLogin = data => api.create(url.LOGIN, data);
-// export const postJwtLogin = data => api.create(url.POST_FAKE_JWT_LOGIN, data);
+export const postJwtLogin = data => api.create(url.POST_FAKE_JWT_LOGIN, data);
 
 // postForgetPwd
 export const postJwtForgetPwd = data => api.create(url.POST_FAKE_JWT_PASSWORD_FORGET, data);
@@ -143,6 +188,7 @@ export const updateCustomer = customer => api.update(url.UPDATE_CUSTOMER + '/' +
 
 // delete Customers
 export const deleteCustomer = customer => api.delete(url.DELETE_CUSTOMER + '/' + customer);
+
 
 // get Sellers
 export const getSellers = () => api.get(url.GET_SELLERS);

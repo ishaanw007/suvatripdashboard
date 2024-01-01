@@ -3,6 +3,16 @@ import { combineReducers } from "redux";
 // Front
 import LayoutReducer from "./layouts/reducer";
 
+import PropertyReducer from "./property/reducer";
+
+import PromotionsReducer from "./promotions/reducer";
+
+import ReservationReducer from "./reservation/reducer";
+
+import ReviewsReducer from "./reviews/reducer";
+
+import InboxReducer from "./inbox/reducer";
+
 // Authentication
 import LoginReducer from "./auth/login/reducer";
 import AccountReducer from "./auth/register/reducer";
@@ -70,6 +80,11 @@ import JobReducer from "./jobs/reducer";
 import APIKeyReducer from "./apiKey/reducer";
 
 const rootReducer = combineReducers({
+    Property: PropertyReducer,
+    Promotion: PromotionsReducer,
+    Reservation: ReservationReducer,
+    Reviews: ReviewsReducer,
+    Inbox: InboxReducer,
     Layout: LayoutReducer,
     Login: LoginReducer,
     Account: AccountReducer,

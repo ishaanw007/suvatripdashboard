@@ -34,11 +34,10 @@ import { chatContactData } from "../../common/data";
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getDirectContact as onGetDirectContact,
-  getMessages,
+  getAllChats as onGetDirectContact,
+  getAllChats as getMessages,
   getChannels as onGetChannels,
   addMessage as onAddMessage,
-  deleteMessage as onDeleteMessage
 } from "../../slices/thunks";
 
 import avatar2 from "../../assets/images/users/avatar-2.jpg";
@@ -86,19 +85,24 @@ const Inbox = () => {
   ];
 
 
-  const selectLayoutState = (state) => state.Chat;
+  const selectLayoutState = (state) => state.Inbox;
   const chatProperties = createSelector(
     selectLayoutState,
     (state) => ({
       chats: state.chats,
       messages: state.messages,
       channels: state.channels,
+      allChats: state.allChats,
     })
   );
   // Inside your component
   const {
-    chats, messages, channels
+    chats, messages, channels, allChats
   } = useSelector(chatProperties);
+
+  useEffect(() => {
+    console.log(allChats,chats);
+  }, [allChats,chats])
 
 
   //Toggle Chat Box Menus
@@ -115,7 +119,7 @@ const Inbox = () => {
     setsettings_Menu(!settings_Menu);
   };
   useEffect(() => {
-    dispatch(onGetDirectContact());
+    dispatch(onGetDirectContact('6584b4b8ceb6afd604023923'));
     dispatch(onGetChannels());
     dispatch(getMessages(currentRoomId));
   }, [dispatch, currentRoomId]);
@@ -343,66 +347,6 @@ const Inbox = () => {
                               </div>
                             </Link>
                           </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="d-flex align-items-center px-4 mt-4 pt-2 mb-2">
-                      <div className="flex-grow-1">
-                        <h4 className="mb-0 fs-11 text-muted text-uppercase">
-                          Channels
-                        </h4>
-                      </div>
-                      <div className="flex-shrink-0">
-                        <UncontrolledTooltip
-                          placement="bottom"
-                          target="createnewmsg"
-                        >
-                          Create group
-                        </UncontrolledTooltip>
-                        <Button
-                          color=""
-                          id="createnewmsg"
-                          className="btn btn-soft-success btn-sm"
-                        >
-                          <i className="ri-add-line align-bottom"></i>
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="chat-message-list">
-                      <ul
-                        className="list-unstyled chat-list chat-user-list mb-0 users-list"
-                        id="channelList"
-                      >
-                        {channels.map((channel, key) => (
-                          <React.Fragment key={key}>
-                            <li>
-                              <Link to="#" className="unread-msg-user">
-                                <div className="d-flex align-items-center">
-                                  <div className="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
-                                    <div className="avatar-xxs">
-                                      <div className="avatar-title bg-light rounded-circle text-body">
-                                        #
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="flex-grow-1 overflow-hidden">
-                                    <p className="text-truncate mb-0">
-                                      {channel.name}
-                                    </p>
-                                  </div>
-                                  {channel.unReadMessage && (
-                                    <div className="flex-shrink-0">
-                                      <span className="badge bg-dark-subtle text-body rounded p-1">
-                                        {channel.unReadMessage}
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
-                              </Link>
-                            </li>
-                          </React.Fragment>
                         ))}
                       </ul>
                     </div>

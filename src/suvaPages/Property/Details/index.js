@@ -36,13 +36,6 @@ import ExportCSVModal from "../../../Components/Common/ExportCSVModal";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import DeleteModal from "../../../Components/Common/DeleteModal";
 
-import {
-  getCustomers as onGetCustomers,
-  addNewCustomer as onAddNewCustomer,
-  updateCustomer as onUpdateCustomer,
-  deleteCustomer as onDeleteCustomer,
-} from "../../../slices/thunks";
-
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import TableContainerPromotions from "../../../Components/Common/TableContainerPromotions";
@@ -54,25 +47,34 @@ import { createSelector } from "reselect";
 
 import { gallery } from "../../../common/data";
 
+import {
+  getRooms as onGetRooms,
+  getRoomPhotos as onGetRoomPhotos,
+  updateRooms as onUpdateRooms,
+  addRoom as onAddRoom,
+  deleteRoom as onDeleteRoom
+} from "../../../slices/thunks";
+
 const Details = () => {
   const dispatch = useDispatch();
 
-  const selectLayoutState = (state) => state.Ecommerce;
-  const ecomCustomerProperties = createSelector(
+  const selectLayoutState = (state) => state.Property;
+  const propertyRoomsProperties = createSelector(
     selectLayoutState,
-    (ecom) => ({
-      customers: ecom.customers,
-      isCustomerSuccess: ecom.isCustomerSuccess,
-      error: ecom.error,
+    (property) => ({
+      rooms: property.rooms,
+      roomPhotos: property.roomPhotos
     })
   );
-  // Inside your component
+
   const {
-    customers, isCustomerSuccess, error
-  } = useSelector(ecomCustomerProperties)
+    rooms,
+    roomPhotos
+  } = useSelector(propertyRoomsProperties)
 
   const [isEdit, setIsEdit] = useState(false);
   const [customer, setCustomer] = useState([]);
+  const [roomPictures, setRoomPicture] = useState([])
 
   // Delete customer
   const [deleteModal, setDeleteModal] = useState(false);
@@ -82,6 +84,8 @@ const Details = () => {
 
   const [displayCategory, setCategory] = useState("All");
   const [index, setIndex] = useState(-1);
+
+  const [error, setError] = useState(false)
 
   const filterGallery = ({ category }) => {
     return (
@@ -122,42 +126,48 @@ const Details = () => {
     enableReinitialize: true,
 
     initialValues: {
-      customer: (customer && customer.customer) || '',
-      email: (customer && customer.email) || '',
-      phone: (customer && customer.phone) || '',
-      date: (customer && customer.date) || '',
-      status: (customer && customer.status) || '',
+      roomType: (customer && customer.roomType) || '',
+      guests: (customer && customer.guests) || '',
+      beds: (customer && customer.beds) || '',
+      bathroom: (customer && customer.bathroom) || '',
+      noOfRooms: (customer && customer.noOfRooms) || '',
+      price: (customer && customer.price) || '',
     },
     validationSchema: Yup.object({
-      customer: Yup.string().required("Please Enter Customer Name"),
-      email: Yup.string().required("Please Enter Your Email"),
-      phone: Yup.string().required("Please Enter Your Phone"),
-      status: Yup.string().required("Please Enter Your Status")
+      roomType: Yup.string().required("Please Enter Room Type"),
+      guests: Yup.string().required("Please Enter No Of Guests"),
+      beds: Yup.string().required("Please Enter No Of Beds"),
+      bathroom: Yup.string().required("Please Enter No Of Bathrooms"),
+      noOfRooms: Yup.string().required("Please Enter No Of Rooms Available"),
+      price: Yup.string().required("Please Enter Price")
     }),
     onSubmit: (values) => {
       if (isEdit) {
-        const updateCustomer = {
-          _id: customer ? customer._id : 0,
-          customer: values.customer,
-          email: values.email,
-          phone: values.phone,
-          date: date,
-          status: values.status,
+        const updatedRoom = {
+          hotelId: sessionStorage.getItem('hotel_id'),
+          roomType: values.roomType,
+          guests: values.guests,
+          beds: values.beds,
+          bathroom: values.bathroom,
+          noOfRooms: values.noOfRooms,
+          price: values.price,
         };
+
         // update customer
-        dispatch(onUpdateCustomer(updateCustomer));
+        dispatch(onUpdateRooms({id: customer._id, data: updatedRoom}));
         validation.resetForm();
       } else {
-        const newCustomer = {
-          _id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          customer: values["customer"],
-          email: values["email"],
-          phone: values["phone"],
-          date: date,
-          status: values["status"]
+        const newRoom = {
+          hotelId: sessionStorage.getItem('hotel_id'),
+          roomType: values["roomType"],
+          guests: values["guests"],
+          beds: values["beds"],
+          bathroom: values["bathroom"],
+          noOfRooms: values["noOfRooms"],
+          price: values["price"],
         };
         // save new customer
-        dispatch(onAddNewCustomer(newCustomer));
+        dispatch(onAddRoom(newRoom));
         validation.resetForm();
       }
       toggle();
@@ -167,7 +177,7 @@ const Details = () => {
   // Delete Data
   const handleDeleteCustomer = () => {
     if (customer) {
-      dispatch(onDeleteCustomer(customer._id));
+      dispatch(onDeleteRoom(customer._id));
       setDeleteModal(false);
     }
   };
@@ -176,13 +186,16 @@ const Details = () => {
   const handleCustomerClick = useCallback((arg) => {
     const customer = arg;
 
+    console.log(arg._id);
+
     setCustomer({
-      _id: customer._id,
-      customer: customer.customer,
-      email: customer.email,
-      phone: customer.phone,
-      date: customer.date,
-      status: customer.status
+      id: arg._id,
+      roomType: customer.roomType,
+      guests: customer.guests,
+      beds: customer.beds,
+      bathroom: customer.bathroom,
+      noOfRooms: customer.noOfRooms,
+      price: customer.price,
     });
 
     setIsEdit(true);
@@ -191,22 +204,27 @@ const Details = () => {
 
 
   useEffect(() => {
-    if (customers && !customers.length) {
-      dispatch(onGetCustomers());
+    if (rooms && !rooms.length) {
+      dispatch(onGetRooms(localStorage.getItem('hotel_id')));
+      dispatch(onGetRoomPhotos(localStorage.getItem('hotel_id')));
     }
-  }, [dispatch, customers]);
+  }, [dispatch, rooms]);
 
 
   useEffect(() => {
-    setCustomer(customers);
-  }, [customers]);
+    setCustomer(rooms);
+  }, [rooms]);
 
   useEffect(() => {
-    if (!isEmpty(customers)) {
-      setCustomer(customers);
+    if (!isEmpty(rooms)) {
+      setCustomer(rooms);
       setIsEdit(false);
     }
-  }, [customers]);
+  }, [rooms]);
+
+  useEffect(() => {
+    console.log(customer, 'ccccccccccc');
+  }, [customer])
 
   // Add Data
   const handleCustomerClicks = () => {
@@ -273,66 +291,89 @@ const Details = () => {
     () => [
       {
         Header: 'Room Type',
-        accessor: 'id',
+        accessor: 'roomType',
         hiddenColumns: true,
         Cell: (cell) => {
-          return <input type="hidden" value={cell.value} />;
+          return <div>{cell.value}</div>
         }
       },
       {
         Header: "Guests",
-        accessor: "customer",
+        accessor: "guests",
         filterable: false,
+        Cell: (cell) => {
+          return <div>{cell.value}</div>
+        }
       },
       {
         Header: "Beds",
-        accessor: "email",
+        accessor: "beds",
         filterable: false,
+        Cell: (cell) => {
+          return <div>{cell.value}</div>
+        }
       },
       {
         Header: "Bathroom",
-        accessor: "phone",
+        accessor: "bathroom",
         filterable: false,
+        Cell: (cell) => {
+          return <div>{cell.value}</div>
+        }
       },
       {
         Header: "Price",
-        accessor: "date",
+        accessor: "price",
         filterable: false,
-        Cell: (cell) => (
-          <>
-            {handleValidDate(cell.value)}
-          </>
-        ),
+        Cell: (cell) => {
+          return <div>{cell.value}</div>
+        }
       },
       {
         Header: "Room of this type",
-        accessor: "",
+        accessor: "noOfRooms",
         filterable: false,
-        Cell: (cell) => (
-          <>
-            {handleValidDate(cell.value)}
-          </>
-        ),
+        Cell: (cell) => {
+          return <div>{cell.value}</div>
+        }
       },
       {
         Header: "Action",
         Cell: (cellProps) => {
           return (
-            <UncontrolledDropdown>
-              <DropdownToggle tag="button" className="bg-transparent border-0" id="dropdownMenuButton">
-                <i className="ri-more-2-fill"></i>
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
+            <ul className="list-inline hstack gap-2 mb-0">
+              <li className="list-inline-item edit" title="Edit">
+                <Link
+                  to="#"
+                  className="text-primary d-inline-block edit-item-btn"
+                  onClick={() => { handleCustomerClick(cellProps.row.original); }}
+                >
+
+                  <i className="ri-pencil-fill fs-16"></i>
+                </Link>
+              </li>
+              <li className="list-inline-item" title="Remove">
+                <Link
+                  to="#"
+                  className="text-danger d-inline-block remove-item-btn"
+                  onClick={() => { const customerData = cellProps.row.original; onClickDelete(customerData); }}
+                >
+                  <i className="ri-delete-bin-5-fill fs-16"></i>
+                </Link>
+              </li>
+            </ul>
           );
         },
       },
     ],
     [handleCustomerClick, checkedAll]
   );
+
+  useEffect(() => {
+    if(roomPhotos) {
+      setRoomPicture(roomPhotos)
+    }
+  }, [roomPhotos])
 
   const dateFormat = () => {
     let d = new Date(),
@@ -358,7 +399,7 @@ const Details = () => {
         <ExportCSVModal
           show={isExportCSV}
           onCloseClick={() => setIsExportCSV(false)}
-          data={customers}
+          data={rooms}
         />
         <DeleteModal
           show={deleteModal}
@@ -387,19 +428,11 @@ const Details = () => {
                         ><i className="ri-delete-bin-2-line"></i></button>}
                         <button
                           type="button"
-                          className="btn btn-success add-btn"
+                          className="btn btn-danger add-btn"
                           id="create-btn"
                           onClick={() => { setIsEdit(false); toggle(); }}
                         >
-                          <i className="ri-add-line align-bottom me-1"></i> Add
-                          Deal
-                        </button>{" "}
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          <i className="ri-equalizer-fill me-2 align-bottom"></i>
-                          Filter
+                          Add New Room
                         </button>
                       </div>
                     </div>
@@ -407,10 +440,10 @@ const Details = () => {
                 </CardHeader>
                 <div className="card-body pt-0 bg-white">
                   <div>
-                    {isCustomerSuccess && customers.length ? (
+                    {rooms && rooms.length ? (
                       <TableContainerPromotions
                         columns={columns}
-                        data={(customers || [])}
+                        data={(rooms || [])}
                         isGlobalFilter={false}
                         isAddUserList={false}
                         customPageSize={8}
@@ -419,12 +452,12 @@ const Details = () => {
                         isCustomerFilter={false}
                         SearchPlaceholder='Search for customer, email, phone, status or something...'
                       />
-                    ) : (<Loader error={error} />)
+                    ) : (<h4 className="mt-3 text-center">No rooms found!</h4>)
                     }
                   </div>
                   <Modal id="showModal" isOpen={modal} toggle={toggle} centered>
                     <ModalHeader className="bg-light p-3" toggle={toggle}>
-                      {!!isEdit ? "Edit Customer" : "Add Customer"}
+                      {!!isEdit ? "Edit Room" : "Add Room"}
                     </ModalHeader>
                     <Form className="tablelist-form" onSubmit={(e) => {
                       e.preventDefault();
@@ -432,149 +465,134 @@ const Details = () => {
                       return false;
                     }}>
                       <ModalBody>
-                        <input type="hidden" id="id-field" />
 
-                        <div
-                          className="mb-3"
-                          id="modal-id"
-                          style={{ display: "none" }}
-                        >
-                          <Label htmlFor="id-field1" className="form-label">
-                            ID
-                          </Label>
-                          <Input
-                            type="text"
-                            id="id-field1"
-                            className="form-control"
-                            placeholder="ID"
-                            readOnly
-                          />
-                        </div>
-
+                        {/* Room Type */}
                         <div className="mb-3">
-                          <Label
-                            htmlFor="customername-field"
-                            className="form-label"
-                          >
-                            Deal Name
-                          </Label>
-                          <Input
-                            name="customer"
-                            id="customername-field"
-                            className="form-control"
-                            placeholder="Enter Deal Name"
-                            type="text"
-                            validate={{
-                              required: { value: true },
-                            }}
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.customer || ""}
-                            invalid={
-                              validation.touched.customer && validation.errors.customer ? true : false
-                            }
-                          />
-                          {validation.touched.customer && validation.errors.customer ? (
-                            <FormFeedback type="invalid">{validation.errors.customer}</FormFeedback>
-                          ) : null}
-                        </div>
-
-                        <div className="mb-3">
-                          <Label htmlFor="email-field" className="form-label">
-                            Reservations Left
-                          </Label>
-                          <Input
-                            name="email"
-                            type="email"
-                            id="email-field"
-                            placeholder="Enter Reservations Left"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.email || ""}
-                            invalid={
-                              validation.touched.email && validation.errors.email ? true : false
-                            }
-                          />
-                          {validation.touched.email && validation.errors.email ? (
-                            <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
-                          ) : null}
-
-                        </div>
-
-                        <div className="mb-3">
-                          <Label htmlFor="phone-field" className="form-label">
-                            End Date
-                          </Label>
-                          <Input
-                            name="phone"
-                            type="text"
-                            id="phone-field"
-                            placeholder="Enter End Date"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.phone || ""}
-                            invalid={
-                              validation.touched.phone && validation.errors.phone ? true : false
-                            }
-                          />
-                          {validation.touched.phone && validation.errors.phone ? (
-                            <FormFeedback type="invalid">{validation.errors.phone}</FormFeedback>
-                          ) : null}
-
-                        </div>
-
-                        <div className="mb-3">
-                          <Label htmlFor="date-field" className="form-label">
+                          <Label htmlFor="room-type-field" className="form-label">
                             Room Type
                           </Label>
-
-                          <Flatpickr
-                            name="date"
-                            id="date-field"
-                            className="form-control"
-                            placeholder="Enter Room Type"
-                            options={{
-                              altInput: true,
-                              altFormat: "d M, Y",
-                              dateFormat: "d M, Y",
-                            }}
-                            onChange={(e) =>
-                              dateformate(e)
-                            }
-                            value={validation.values.date || ""}
-                          />
-                          {validation.touched.date && validation.errors.date ? (
-                            <FormFeedback type="invalid">{validation.errors.date}</FormFeedback>
+                          <Input
+                            type="select"
+                            name="roomType"
+                            id="room-type-field"
+                            className={`form-control ${validation.touched.roomType && validation.errors.roomType ? 'is-invalid' : ''}`}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.roomType || ""}
+                          >
+                            {/* Add options for room types */}
+                            <option value="">Select Room Type</option>
+                            <option value="Single">Single</option>
+                            <option value="Double">Double</option>
+                            <option value="Twin">Twin</option>
+                            <option value="Triple">Triple</option>
+                            <option value="Quadruple">Quadruple</option>
+                            <option value="Studio">Studio</option>
+                            <option value="Apartment">Apartment</option>
+                            {/* Add other room types as needed */}
+                          </Input>
+                          {validation.touched.roomType && validation.errors.roomType ? (
+                            <div className="invalid-feedback">{validation.errors.roomType}</div>
                           ) : null}
                         </div>
 
-                        <div>
-                          <Label htmlFor="status-field" className="form-label">
-                            Status
+                        {/* Guests */}
+                        <div className="mb-3">
+                          <Label htmlFor="guests-field" className="form-label">
+                            Guests
                           </Label>
-
                           <Input
-                            name="status"
-                            type="select"
-                            className="form-select"
-                            id="status-field"
+                            type="number"
+                            name="guests"
+                            id="guests-field"
+                            className={`form-control ${validation.touched.guests && validation.errors.guests ? 'is-invalid' : ''}`}
+                            placeholder="Enter number of guests"
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={
-                              validation.values.status || ""
-                            }
-                          >
-                            {customermocalstatus.map((item, key) => (
-                              <React.Fragment key={key}>
-                                {item.options.map((item, key) => (<option value={item.value} key={key}>{item.label}</option>))}
-                              </React.Fragment>
-                            ))}
-                          </Input>
-                          {validation.touched.status &&
-                            validation.errors.status ? (
-                            <FormFeedback type="invalid">
-                              {validation.errors.status}
-                            </FormFeedback>
+                            value={validation.values.guests || ""}
+                          />
+                          {validation.touched.guests && validation.errors.guests ? (
+                            <div className="invalid-feedback">{validation.errors.guests}</div>
+                          ) : null}
+                        </div>
+
+                        {/* Beds */}
+                        <div className="mb-3">
+                          <Label htmlFor="beds-field" className="form-label">
+                            Beds
+                          </Label>
+                          <Input
+                            type="number"
+                            name="beds"
+                            id="beds-field"
+                            className={`form-control ${validation.touched.beds && validation.errors.beds ? 'is-invalid' : ''}`}
+                            placeholder="Enter number of beds"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.beds || ""}
+                          />
+                          {validation.touched.beds && validation.errors.beds ? (
+                            <div className="invalid-feedback">{validation.errors.beds}</div>
+                          ) : null}
+                        </div>
+
+                        {/* Bathroom */}
+                        <div className="mb-3">
+                          <Label htmlFor="bathroom-field" className="form-label">
+                            Bathroom
+                          </Label>
+                          <Input
+                            type="number"
+                            name="bathroom"
+                            id="bathroom-field"
+                            className={`form-control ${validation.touched.bathroom && validation.errors.bathroom ? 'is-invalid' : ''}`}
+                            placeholder="Enter number of bathrooms"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.bathroom || ""}
+                          />
+                          {validation.touched.bathroom && validation.errors.bathroom ? (
+                            <div className="invalid-feedback">{validation.errors.bathroom}</div>
+                          ) : null}
+                        </div>
+
+                        {/* No Of Rooms */}
+                        <div className="mb-3">
+                          <Label htmlFor="rooms-field" className="form-label">
+                            No Of Rooms
+                          </Label>
+                          <Input
+                            type="number"
+                            name="noOfRooms" // Updated field name here
+                            id="rooms-field"
+                            className={`form-control ${validation.touched.noOfRooms && validation.errors.noOfRooms ? 'is-invalid' : ''}`}
+                            placeholder="Enter number of rooms"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.noOfRooms || ""}
+                          />
+                          {validation.touched.noOfRooms && validation.errors.noOfRooms ? (
+                            <div className="invalid-feedback">{validation.errors.noOfRooms}</div>
+                          ) : null}
+                        </div>
+
+                        {/* Price */}
+                        <div className="mb-3">
+                          <Label htmlFor="price-field" className="form-label">
+                            Price
+                          </Label>
+                          <Input
+                            type="number"
+                            name="price"
+                            id="price-field"
+                            className={`form-control ${validation.touched.price && validation.errors.price ? 'is-invalid' : ''}`}
+                            placeholder="Enter price"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.price || ""}
+                          />
+                          {validation.touched.price && validation.errors.price ? (
+                            <div className="invalid-feedback">{validation.errors.price}</div>
                           ) : null}
                         </div>
                       </ModalBody>
@@ -582,7 +600,7 @@ const Details = () => {
                         <div className="hstack gap-2 justify-content-end">
                           <button type="button" className="btn btn-light" onClick={() => { setModal(false); }}> Close </button>
 
-                          <button type="submit" className="btn btn-success"> {!!isEdit ? "Update" : "Add Customer"} </button>
+                          <button type="submit" className="btn btn-success"> {!!isEdit ? "Update" : "Add Room"} </button>
                         </div>
                       </ModalFooter>
                     </Form>
@@ -595,15 +613,15 @@ const Details = () => {
           <Row>
             <Col lg={12}>
               <Masonry className="row gallery-wrapper">
-                {filteredGallery.map(({ img, title, auther, likes, comments }, key) => (
+                {roomPictures.length>0 && roomPictures.map(({ link, title, auther, likes, comments }, key) => (
                   <Col xxl={4} xl={4} sm={4} className="element-item project designing development" key={key}>
-                    <Card className="gallery-box">
+                    <Card className="gallery-box border-0">
                       <div className="gallery-container">
-                        <Link className="image-popup" to="#" title={title} onClick={() => setIndex(key)}>
-                          <img className="gallery-img img-fluid mx-auto" src={img} alt="" />
-                          <div className="gallery-overlay">
+                        <Link className="image-popup" to="#" onClick={() => setIndex(key)}>
+                          <img className="gallery-img img-fluid mx-auto" src={link} alt="" />
+                          {/* <div className="gallery-overlay">
                             <h5 className="overlay-caption">{title}</h5>
-                          </div>
+                          </div> */}
                         </Link>
                       </div>
                     </Card>

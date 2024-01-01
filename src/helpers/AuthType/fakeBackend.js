@@ -150,6 +150,7 @@ const fakeBackend = () => {
             //Update object's name property.
             users[objIndex].username = user.username;
 
+            console.log(users[objIndex], '111111111');
             // Assign a value to locastorage
             sessionStorage.removeItem("authUser");
             sessionStorage.setItem("authUser", JSON.stringify(users[objIndex]));

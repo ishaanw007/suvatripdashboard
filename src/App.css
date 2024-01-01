@@ -15,6 +15,11 @@
   }
 }
 
+input[type="radio"]:checked + label::before {
+  background-color: #ff5f63;
+  border-color: #ff5f63;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

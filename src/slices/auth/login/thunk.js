@@ -21,7 +21,7 @@ export const loginUser = (user, history) => async (dispatch) => {
       response = postJwtLogin({
         email: user.email,
         password: user.password,
-        role:"vendor"
+        role: user.role
       });
 
     } else if (process.env.REACT_APP_DEFAULTAUTH) {
@@ -30,6 +30,8 @@ export const loginUser = (user, history) => async (dispatch) => {
         password: user.password,
       });
     }
+
+    console.log(user, 'uuuuuu');
 
     var data = await response;
 
@@ -41,13 +43,21 @@ export const loginUser = (user, history) => async (dispatch) => {
         data = finallogin.data;
         if (finallogin.status === "success") {
           dispatch(loginSuccess(data));
-          history('/dashboard-home')
+          if(data.role==='vendor') {
+            history('/vendor/dashboard-home')
+          } else if(data.role==='admin') {
+            history('/admin/dashboard-home')
+          }
         } else {
           dispatch(apiError(finallogin));
         }
       } else {
         dispatch(loginSuccess(data));
-        history('/dashboard-home')
+        if(data.role==='vendor') {
+          history('/vendor/dashboard-home')
+        } else if(data.role==='admin') {
+          history('/admin/dashboard-home')
+        }
       }
     }
   } catch (error) {
@@ -85,6 +95,8 @@ export const socialLogin = (type, history) => async (dispatch) => {
       
       const socialdata = await response;
     if (socialdata) {
+      
+      console.log(response, '4444444444');
       sessionStorage.setItem("authUser", JSON.stringify(response));
       dispatch(loginSuccess(response));
       history('/dashboard')

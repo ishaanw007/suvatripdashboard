@@ -69,6 +69,18 @@ const Vat = () => {
 
   const [isEdit, setIsEdit] = useState(false);
   const [customer, setCustomer] = useState([]);
+  const [vat, setVat] = useState([{
+    title: 'VAT',
+    now: 'VAT of one',
+    date: '12/26/2023',
+    mostPopulart: '13% is included'
+  },
+  {
+    title: 'City Tax',
+    now: 'City Tax',
+    date: '12/26/2023',
+    mostPopular: '17% is included'
+  }])
 
   // Delete customer
   const [deleteModal, setDeleteModal] = useState(false);
@@ -258,22 +270,22 @@ const Vat = () => {
     () => [
       {
         Header: "",
-        accessor: "customer",
-        id: '#',
+        accessor: "title",
+        filterable: false,
       },
       {
         Header: "Now",
-        accessor: "customer",
+        accessor: "now",
         filterable: false,
       },
       {
         Header: "Date",
-        accessor: "phone",
+        accessor: "date",
         filterable: false,
       },
       {
         Header: "Most Popular In Kathmandu",
-        accessor: "email",
+        accessor: "mostPopular",
         filterable: false,
       },
     ],
@@ -353,10 +365,10 @@ const Vat = () => {
                 </CardHeader>
                 <div className="card-body pt-0 bg-white">
                   <div>
-                    {isCustomerSuccess && customers.length ? (
+                    {vat ? (
                       <TableContainerPromotions
                         columns={columns}
-                        data={(customers || [])}
+                        data={(vat || [])}
                         isGlobalFilter={false}
                         isAddUserList={false}
                         customPageSize={8}

@@ -7,6 +7,16 @@ export * from "./auth/register/thunk";
 export * from "./auth/forgetpwd/thunk";
 export * from "./auth/profile/thunk";
 
+export * from "./property/thunk"
+
+export * from "./promotions/thunk"
+
+export * from "./reservation/thunk"
+
+export * from "./reviews/thunk"
+
+export * from "./inbox/thunk"
+
 //Calendar
 export * from "./calendar/thunk";
 //Chat

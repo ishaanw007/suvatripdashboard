@@ -35,10 +35,7 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import DeleteModal from "../../Components/Common/DeleteModal";
 
 import {
-  getCustomers as onGetCustomers,
-  addNewCustomer as onAddNewCustomer,
-  updateCustomer as onUpdateCustomer,
-  deleteCustomer as onDeleteCustomer,
+  getReservations as onGetReservations,
 } from "../../slices/thunks";
 
 //redux
@@ -177,7 +174,7 @@ const Reservations = () => {
 
   useEffect(() => {
     if (customers && !customers.length) {
-      dispatch(onGetCustomers());
+      dispatch(onGetReservations(localStorage.getItem('hotel_id')));
     }
   }, [dispatch, customers]);
 
@@ -406,7 +403,7 @@ const Reservations = () => {
                         isCustomerFilter={false}
                         SearchPlaceholder='Search for customer, email, phone, status or something...'
                       />
-                    ) : (<Loader error={error} />)
+                    ) : (<h4 className="mt-3 text-center">No reservations found!</h4>)
                     }
                   </div>
                   <Modal id="showModal" isOpen={modal} toggle={toggle} centered>

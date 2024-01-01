@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from "react-router-dom";
 
 //Layouts
@@ -6,7 +6,7 @@ import NonAuthLayout from "../Layouts/NonAuthLayout";
 import VerticalLayout from "../Layouts/index";
 
 //routes
-import { authProtectedRoutes, publicRoutes } from "./allRoutes";
+import { routes, publicRoutes } from "./allRoutes";
 import { AuthProtected } from './AuthProtected';
 
 const Index = () => {
@@ -29,7 +29,7 @@ const Index = () => {
                 </Route>
 
                 <Route>
-                    {authProtectedRoutes.map((route, idx) => (
+                    {routes.map((route, idx) => (
                         <Route
                             path={route.path}
                             element={

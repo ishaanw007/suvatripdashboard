@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Col,
@@ -16,9 +16,33 @@ import classnames from "classnames";
 import Rating from "react-rating";
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
 
+import {
+  getReviews as onGetReviews
+} from "../../slices/thunks";
+import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from 'reselect';
+import Loader from "../../Components/Common/Loader";
+
 
 export default function Review() {
+  const dispatch = useDispatch();
+
+  const selectLayoutState = (state) => state.Reviews;
+  const propertyFacilitiesProperties = createSelector(
+    selectLayoutState,
+    (review) => ({
+      reviews: review.reviews,
+      isReviewSuccess: review.isReviewSuccess
+    })
+  );
+
+  const {
+    reviews,
+    isReviewSuccess
+  } = useSelector(propertyFacilitiesProperties)
+
   const [justifyPillsTab, setjustifyPillsTab] = useState("1");
+  const [reviewData, setReviewData] = useState()
 
   const justifyPillsToggle = (tab) => {
     if (justifyPillsTab !== tab) {
@@ -26,20 +50,31 @@ export default function Review() {
     }
   };
 
+  useEffect(() => {
+    dispatch(onGetReviews({id: localStorage.getItem('hotel_id'), filter: 'last30days'}));
+  }, [])
+
+  useEffect(() => {
+    console.log(reviews);
+    if (reviews) {
+      setReviewData(reviews);
+    }
+  }, [reviews])
+
 
   const data = [
-  { stars: 5, percentage: 55, value: 50 },
-  { stars: 4, percentage: 45, value: 40 },
-  { stars: 3, percentage: 35, value: 60 },
-  { stars: 2, percentage: 35, value: 20 },
-  { stars: 1, percentage: 55, value: 30 },
-];
+    { stars: 5, percentage: 55, value: 50 },
+    { stars: 4, percentage: 45, value: 40 },
+    { stars: 3, percentage: 35, value: 60 },
+    { stars: 2, percentage: 35, value: 20 },
+    { stars: 1, percentage: 55, value: 30 },
+  ];
 
   const customStyle = {
     padding: "5px",
     border: "2px solid #D8D8D8",
     borderRadius: "5px",
-    alignSelf: "center", 
+    alignSelf: "center",
   };
 
   return (
@@ -72,6 +107,9 @@ export default function Review() {
                     active: justifyPillsTab === "1",
                   })}
                   onClick={() => {
+                    if(justifyPillsTab!=='1') {
+                      dispatch(onGetReviews({id: localStorage.getItem('hotel_id'), filter: 'last30days'})); 
+                    }
                     justifyPillsToggle("1");
                   }}
                 >
@@ -85,6 +123,9 @@ export default function Review() {
                     active: justifyPillsTab === "2",
                   })}
                   onClick={() => {
+                    if(justifyPillsTab!=='2') {
+                      dispatch(onGetReviews({id: localStorage.getItem('hotel_id'), filter: '3months'})); 
+                    }
                     justifyPillsToggle("2");
                   }}
                 >
@@ -98,6 +139,9 @@ export default function Review() {
                     active: justifyPillsTab === "3",
                   })}
                   onClick={() => {
+                    if(justifyPillsTab!=='3') {
+                      dispatch(onGetReviews({id: localStorage.getItem('hotel_id'), filter: '6months'})); 
+                    }
                     justifyPillsToggle("3");
                   }}
                 >
@@ -111,6 +155,9 @@ export default function Review() {
                     active: justifyPillsTab === "4",
                   })}
                   onClick={() => {
+                    if(justifyPillsTab!=='4') {
+                      dispatch(onGetReviews({id: localStorage.getItem('hotel_id'), filter: '12months'})); 
+                    }
                     justifyPillsToggle("4");
                   }}
                 >
@@ -134,27 +181,93 @@ export default function Review() {
             </h5>
           </Col>
           <Col xl={6}>
-            <Card style={{ boxShadow: "none" }}>
-              {data.map((item, index) => (
-                <CardBody key={index}>
-                  <div className="live-preview">
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <span
-                        style={{ marginRight: "10px" }}
-                      >{`${item.stars} Star`}</span>
-                      <Progress
-                        color="primary"
-                        value={item.percentage}
-                        style={{ flex: 1 }}
-                      >
-                        {` ${item.percentage}% `}
-                      </Progress>
-                      <span style={{ marginLeft: "10px" }}>{item.value}</span>
-                    </div>
+            {reviewData && <Card style={{ boxShadow: "none" }}>
+              <CardBody>
+                <div className="live-preview">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span
+                      style={{ marginRight: "10px" }}
+                    >{`5 Star`}</span>
+                    <Progress
+                      color="primary"
+                      value={reviewData?.ratingPercentages?.fiveStars}
+                      style={{ flex: 1 }}
+                    >
+                      {` ${reviewData?.ratingPercentages?.fiveStars}% `}
+                    </Progress>
+                    <span style={{ marginLeft: "10px" }}>{reviewData?.ratingCounts?.fiveStars}</span>
                   </div>
-                </CardBody>
-              ))}
-            </Card>
+                </div>
+              </CardBody>
+              <CardBody>
+                <div className="live-preview">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span
+                      style={{ marginRight: "10px" }}
+                    >{`4 Star`}</span>
+                    <Progress
+                      color="primary"
+                      value={reviewData?.ratingPercentages?.fourStars}
+                      style={{ flex: 1 }}
+                    >
+                      {` ${reviewData?.ratingPercentages?.fourStars}% `}
+                    </Progress>
+                    <span style={{ marginLeft: "10px" }}>{reviewData?.ratingCounts?.fourStars}</span>
+                  </div>
+                </div>
+              </CardBody>
+              <CardBody>
+                <div className="live-preview">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span
+                      style={{ marginRight: "10px" }}
+                    >{`3 Star`}</span>
+                    <Progress
+                      color="primary"
+                      value={reviewData?.ratingPercentages?.threeStars}
+                      style={{ flex: 1 }}
+                    >
+                      {` ${reviewData?.ratingPercentages?.threeStars}% `}
+                    </Progress>
+                    <span style={{ marginLeft: "10px" }}>{reviewData?.ratingCounts?.threeStars}</span>
+                  </div>
+                </div>
+              </CardBody>
+              <CardBody>
+                <div className="live-preview">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span
+                      style={{ marginRight: "10px" }}
+                    >{`2 Star`}</span>
+                    <Progress
+                      color="primary"
+                      value={reviewData?.ratingPercentages?.twoStars}
+                      style={{ flex: 1 }}
+                    >
+                      {` ${reviewData?.ratingPercentages?.twoStars}% `}
+                    </Progress>
+                    <span style={{ marginLeft: "10px" }}>{reviewData?.ratingCounts?.twoStars}</span>
+                  </div>
+                </div>
+              </CardBody>
+              <CardBody>
+                <div className="live-preview">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span
+                      style={{ marginRight: "10px" }}
+                    >{`1 Star`}</span>
+                    <Progress
+                      color="primary"
+                      value={reviewData?.ratingPercentages?.oneStar}
+                      style={{ flex: 1 }}
+                    >
+                      {` ${reviewData?.ratingPercentages?.oneStar}% `}
+                    </Progress>
+                    <span style={{ marginLeft: "10px" }}>{reviewData?.ratingCounts?.oneStar}</span>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>}
           </Col>
         </Row>
 
@@ -182,110 +295,53 @@ export default function Review() {
               </div>
 
               {/* Review Card */}
-              <Card className="joblist-card" style={{ boxShadow: "none" }}>
-                <CardBody
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    border: "1px solid #D8D8D8",
-                    width: "90%",
-                    borderRadius: "10px",
-                    justifyContent: "center",
-                    marginLeft: "20px",
-                    boxShadow: "none",
-                  }}
-                >
-                  <div className="d-flex">
-                    <div className="d-flex align-items-center py-2">
-                      <div className="avatar-xs flex-shrink-0 me-3">
-                        <img
-                          src={avatar1}
-                          alt=""
-                          className="img-fluid rounded-circle"
-                        />
-                      </div>
-                      <div className="flex-grow-1">
-                        <div>
-                          <h5 className="fs-14 mb-1">Esther James</h5>
-                          <p className="fs-13 text-muted mb-0">
-                            Frontend Developer
-                          </p>
-                        </div>
-                        <div id="basic-rater" dir="ltr">
-                          <Rating
-                            initialRating={3}
-                            emptySymbol="mdi mdi-star-outline text-muted "
-                            fullSymbol="mdi mdi-star text-warning "
+              { isReviewSuccess ? reviewData && reviewData?.data?.length > 0 ? reviewData?.data?.map((data) => {
+                return(
+                  <Card className="joblist-card" style={{ boxShadow: "none" }}>
+                  <CardBody
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      border: "1px solid #D8D8D8",
+                      width: "90%",
+                      borderRadius: "10px",
+                      justifyContent: "center",
+                      marginLeft: "20px",
+                      boxShadow: "none",
+                    }}
+                  >
+                    <div className="d-flex">
+                      <div className="d-flex align-items-center py-2">
+                        <div className="avatar-xs flex-shrink-0 me-3">
+                          <img
+                            src={avatar1}
+                            alt=""
+                            className="img-fluid rounded-circle"
                           />
+                        </div>
+                        <div className="flex-grow-1">
+                          <div>
+                            <h5 className="fs-14 mb-1">{data.user_id.username}</h5>
+                          </div>
+                          <div id="basic-rater" dir="ltr">
+                            <Rating
+                              initialRating={data.rating}
+                              emptySymbol="mdi mdi-star-outline text-muted "
+                              fullSymbol="mdi mdi-star text-warning "
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <p
-                    className="text-muted job-description "
-                    style={{ marginTop: "-10px" }}
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur.
-                  </p>
-                </CardBody>
-              </Card>
-              <Card className="joblist-card" style={{ boxShadow: "none" }}>
-                <CardBody
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    border: "1px solid #D8D8D8",
-                    width: "90%",
-                    borderRadius: "10px",
-                    justifyContent: "center",
-                    marginLeft: "20px",
-                    boxShadow: "none",
-                  }}
-                >
-                  <div className="d-flex">
-                    <div className="d-flex align-items-center py-2">
-                      <div className="avatar-xs flex-shrink-0 me-3">
-                        <img
-                          src={avatar1}
-                          alt=""
-                          className="img-fluid rounded-circle"
-                        />
-                      </div>
-                      <div className="flex-grow-1">
-                        <div>
-                          <h5 className="fs-14 mb-1">Esther James</h5>
-                          <p className="fs-13 text-muted mb-0">
-                            Frontend Developer
-                          </p>
-                        </div>
-                        <div id="basic-rater" dir="ltr">
-                          <Rating
-                            initialRating={3}
-                            emptySymbol="mdi mdi-star-outline text-muted "
-                            fullSymbol="mdi mdi-star text-warning "
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p
-                    className="text-muted job-description "
-                    style={{ marginTop: "-10px" }}
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur.
-                  </p>
-                </CardBody>
-              </Card>
+                    <p
+                      className="text-muted job-description "
+                    >
+                      {data.review}
+                    </p>
+                  </CardBody>
+                </Card>
+                )
+              }) : null : <Loader />}
             </div>
           </Col>
         </Row>

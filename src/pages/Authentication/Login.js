@@ -47,7 +47,7 @@ const Login = (props) => {
             const updatedUserPassword = process.env.REACT_APP_DEFAULTAUTH === "firebase" ? "" : user.confirm_password;
             setUserLogin({
                 email: updatedUserData,
-                password: updatedUserPassword
+                password: updatedUserPassword,
             });
         }
     }, [user]);
@@ -57,8 +57,9 @@ const Login = (props) => {
         enableReinitialize: true,
 
         initialValues: {
-            email: userLogin.email || "vendor@suvatrip.com" || '',
-            password: userLogin.password || "ishaan" || '',
+            email: userLogin.email || '',
+            password: userLogin.password || '',
+            role: userLogin.role || ''
         },
         validationSchema: Yup.object({
             email: Yup.string().required("Please Enter Your Email"),
@@ -170,9 +171,23 @@ const Login = (props) => {
                                                     </div>
                                                 </div>
 
+                                                <div className="mb-3">
+                                                    <Label htmlFor="role" className="form-label">Role</Label>
+                                                    <select
+                                                        name="role"
+                                                        className="form-select"
+                                                        value={validation.values.role}
+                                                        onChange={validation.handleChange}
+                                                    >
+                                                        <option value="">Select Role</option>
+                                                        <option value="vendor">Vendor</option>
+                                                        <option value="admin">Admin</option>
+                                                    </select>
+                                                </div>
+
                                                 {/* <div className="form-check"> */}
-                                                    {/* <Input className="form-check-input" type="checkbox" value="" id="auth-remember-check" /> */}
-                                                    {/* <Label className="form-check-label" htmlFor="auth-remember-check">Remember me</Label> */}
+                                                {/* <Input className="form-check-input" type="checkbox" value="" id="auth-remember-check" /> */}
+                                                {/* <Label className="form-check-label" htmlFor="auth-remember-check">Remember me</Label> */}
                                                 {/* </div> */}
 
                                                 <div className="mt-4">
