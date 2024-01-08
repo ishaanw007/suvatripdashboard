@@ -25,10 +25,6 @@ const Logout = (props) => {
     dispatch(logoutUser());
   }, [dispatch]);
 
-  if (isUserLogout) {
-    return <Navigate to="/login" />;
-  }
-
   return <></>;
 };
 

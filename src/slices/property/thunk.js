@@ -19,7 +19,7 @@ import {
 
 export const getInfo = createAsyncThunk("property/getInfo", async (id) => {
   try {
-    const response = getInfoApi(id);
+    const response = await getInfoApi(id);
     return response;
   } catch (error) {
     return error;
@@ -28,7 +28,7 @@ export const getInfo = createAsyncThunk("property/getInfo", async (id) => {
 
 export const getFacilities = createAsyncThunk("property/getFacilities", async (id) => {
   try {
-    const response = getFacilitiesApi();
+    const response = await getFacilitiesApi();
     return response;
   } catch (error) {
     return error;
@@ -38,7 +38,7 @@ export const getFacilities = createAsyncThunk("property/getFacilities", async (i
 export const updateFacilities = createAsyncThunk("property/updateFacilities", async ({id, data}) => {
   try {
     console.log(data, 'dddddddd');
-    const response = updateHotelApi(id, data);
+    const response = await updateHotelApi(id, data);
     return response;
   } catch (error) {
     return error;
@@ -47,7 +47,7 @@ export const updateFacilities = createAsyncThunk("property/updateFacilities", as
 
 export const getAmmenities = createAsyncThunk("property/getAmmenities", async (id) => {
   try {
-    const response = getAmmenitiesApi(id);
+    const response = await getAmmenitiesApi(id);
     return response;
   } catch (error) {
     return error;
@@ -56,7 +56,7 @@ export const getAmmenities = createAsyncThunk("property/getAmmenities", async (i
 
 export const updateAmmenities = createAsyncThunk("property/updateAmmenities", async ({id, data}) => {
   try {
-    const response = updateHotelApi(id, data);
+    const response = await updateHotelApi(id, data);
     return response;
   } catch (error) {
     return error;
@@ -65,7 +65,7 @@ export const updateAmmenities = createAsyncThunk("property/updateAmmenities", as
 
 export const getPhotos = createAsyncThunk("property/getPhotos", async (id) => {
   try {
-    const response = getPhotosApi(id);
+    const response = await getPhotosApi(id);
     return response;
   } catch (error) {
     return error;
@@ -92,7 +92,7 @@ export const getPhotos = createAsyncThunk("property/getPhotos", async (id) => {
 
 export const getRooms = createAsyncThunk("property/getRooms", async (id) => {
   try {
-    const response = getRoomsApi(id);
+    const response = await getRoomsApi(id);
     return response;
   } catch (error) {
     return error;
@@ -101,7 +101,7 @@ export const getRooms = createAsyncThunk("property/getRooms", async (id) => {
 
 export const getRoomPhotos = createAsyncThunk("property/getRoomPhotos", async (id) => {
   try {
-    const response = getRoomPhotosApi(id);
+    const response = await getRoomPhotosApi(id);
     return response;
   } catch (error) {
     return error;
@@ -110,7 +110,7 @@ export const getRoomPhotos = createAsyncThunk("property/getRoomPhotos", async (i
 
 export const addRoom = createAsyncThunk("property/addRoom", async (data) => {
   try {
-    const response = addRoomApi(data);
+    const response = await addRoomApi(data);
     return response;
   } catch (error) {
     return error;
@@ -120,7 +120,7 @@ export const addRoom = createAsyncThunk("property/addRoom", async (data) => {
 export const updateRooms = createAsyncThunk("property/updateRooms", async ({id, data}) => {
   try {
     console.log(id, 'iiiiii');
-    const response = updateRoomsApi(id, data);
+    const response = await updateRoomsApi(id, data);
     return response;
   } catch (error) {
     return error;
@@ -129,7 +129,7 @@ export const updateRooms = createAsyncThunk("property/updateRooms", async ({id, 
 
 export const deleteRoom = createAsyncThunk("property/deleteRoom", async (id) => {
   try {
-    const response = deleteRoomApi(id);
+    const response = await deleteRoomApi(id);
     return response;
   } catch (error) {
     return error;
@@ -138,7 +138,7 @@ export const deleteRoom = createAsyncThunk("property/deleteRoom", async (id) => 
 
 export const getDescription = createAsyncThunk("property/getDescription", async (id) => {
   try {
-    const response = getDescriptionApi(id);
+    const response = await getDescriptionApi(id);
     return response;
   } catch (error) {
     return error;
@@ -147,7 +147,7 @@ export const getDescription = createAsyncThunk("property/getDescription", async 
 
 export const updateDescription = createAsyncThunk("property/updateDescription", async ({id, data}) => {
   try {
-    const response = updateHotelApi(id, data);
+    const response = await updateHotelApi(id, data);
     return response;
   } catch (error) {
     return error;

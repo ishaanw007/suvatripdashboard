@@ -4,6 +4,7 @@ import {
   postFakeLogin,
   postJwtLogin,
   postSocialLogin,
+  getDashInfo
 } from "../../../helpers/fakebackend_helper";
 
 import { loginSuccess, logoutUserSuccess, apiError, reset_login_flag } from './reducer';
@@ -18,34 +19,38 @@ export const loginUser = (user, history) => async (dispatch) => {
         user.password
       );
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      response = postJwtLogin({
+      response = await postJwtLogin({
         email: user.email,
         password: user.password,
         role: user.role
       });
-
-    } else if (process.env.REACT_APP_DEFAULTAUTH) {
+    } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       response = postFakeLogin({
         email: user.email,
         password: user.password,
       });
     }
 
-    console.log(user, 'uuuuuu');
+    if (response) {
+      let data = await response;
 
-    var data = await response;
+      localStorage.setItem("authUser", JSON.stringify({
+        token: data.token,
+        id: data.id,
+        role: data.role
+      }));
 
-    if (data) {
-      sessionStorage.setItem("authUser", JSON.stringify(data));
+      localStorage.setItem("hotel_id", data.hotel_id)
+
       if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
-        var finallogin = JSON.stringify(data);
+        var finallogin = JSON.stringify({ token: data.token, role: data.role });
         finallogin = JSON.parse(finallogin)
         data = finallogin.data;
         if (finallogin.status === "success") {
           dispatch(loginSuccess(data));
-          if(data.role==='vendor') {
+          if (data.role === 'vendor') {
             history('/vendor/dashboard-home')
-          } else if(data.role==='admin') {
+          } else if (data.role === 'admin') {
             history('/admin/dashboard-home')
           }
         } else {
@@ -53,9 +58,9 @@ export const loginUser = (user, history) => async (dispatch) => {
         }
       } else {
         dispatch(loginSuccess(data));
-        if(data.role==='vendor') {
+        if (data.role === 'vendor') {
           history('/vendor/dashboard-home')
-        } else if(data.role==='admin') {
+        } else if (data.role === 'admin') {
           history('/admin/dashboard-home')
         }
       }
@@ -65,9 +70,11 @@ export const loginUser = (user, history) => async (dispatch) => {
   }
 };
 
+
 export const logoutUser = () => async (dispatch) => {
   try {
-    sessionStorage.removeItem("authUser");
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("hotel_id");
     let fireBaseBackend = getFirebaseBackend();
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       const response = fireBaseBackend.logout;
@@ -97,7 +104,7 @@ export const socialLogin = (type, history) => async (dispatch) => {
     if (socialdata) {
       
       console.log(response, '4444444444');
-      sessionStorage.setItem("authUser", JSON.stringify(response));
+      localStorage.setItem("authUser", JSON.stringify(response));
       dispatch(loginSuccess(response));
       history('/dashboard')
     }

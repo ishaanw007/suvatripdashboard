@@ -4,24 +4,29 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
 
+import { logoutUser } from "../../slices/thunks";
+
+//redux
+import { useDispatch } from "react-redux";
+
 //import images
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
 
 const ProfileDropdown = () => {
-
+    const dispatch = useDispatch();
 
     const profiledropdownData = createSelector(
         (state) => state.Profile.user,
         (user) => user
-      );
+    );
     // Inside your component
     const user = useSelector(profiledropdownData);
 
     const [userName, setUserName] = useState("Admin");
 
     useEffect(() => {
-        if (sessionStorage.getItem("authUser")) {
-            const obj = JSON.parse(sessionStorage.getItem("authUser"));
+        if (localStorage.getItem("authUser")) {
+            const obj = JSON.parse(localStorage.getItem("authUser"));
             setUserName(process.env.REACT_APP_DEFAULTAUTH === "fake" ? obj.username === undefined ? user.first_name ? user.first_name : obj.data.first_name : "Admin" || "Admin" :
                 process.env.REACT_APP_DEFAULTAUTH === "firebase" ? obj.email && obj.email : "Admin"
             );
@@ -96,7 +101,10 @@ const ProfileDropdown = () => {
                         </Link>
                     </DropdownItem>
                     <DropdownItem className='p-0'>
-                        <Link to={process.env.PUBLIC_URL + "/logout"} className="dropdown-item">
+                        <Link onClick={() => {
+                            dispatch(logoutUser());
+                            window.location.reload()
+                        }} className="dropdown-item">
                             <i
                                 className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span
                                     className="align-middle" data-key="t-logout">Logout</span>

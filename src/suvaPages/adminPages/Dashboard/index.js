@@ -9,36 +9,7 @@ import ReservationStatistics from './ReservationStatistics';
 import Rooms from './Rooms';
 import {Button} from 'reactstrap';
 
-import {
-    getInfo as onGetInfo,
-  } from "../../../slices/thunks";
-  import { useSelector, useDispatch } from "react-redux";
-  import { createSelector } from 'reselect';
-
 const DashboardAnalytics = () => {
-    const dispatch = useDispatch();
-
-    const selectLayoutState = (state) => state.Property;
-    const propertyInfoProperties = createSelector(
-      selectLayoutState,
-      (property) => ({
-        info: property.info,
-      })
-    );
-  
-    const {
-      info
-    } = useSelector(propertyInfoProperties)
-
-    useEffect(() => {
-        dispatch(onGetInfo());
-      }, [])
-    
-      useEffect(() => {
-        if(info) {
-          localStorage.setItem('hotel_id', info._id);
-        }
-      }, [info])
     
     document.title = "Analytics | Velzon - React Admin & Dashboard Template";
     return (

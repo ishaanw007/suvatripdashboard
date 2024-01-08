@@ -20,6 +20,7 @@ const loginSlice = createSlice({
     },
     loginSuccess(state, action) {
       state.user = action.payload
+      state.isUserLogout = false;
       state.loading = false;
       state.errorMsg = false;
     },

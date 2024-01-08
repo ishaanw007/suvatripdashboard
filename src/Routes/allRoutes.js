@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 import AdminDashbaord from "../suvaPages/adminPages/Dashboard"
-import AdminHotels from "../suvaPages/adminPages/Reservations"
+import AdminHotels from "../suvaPages/adminPages/Hotels"
 
 //SuvaTrip////////////////////////////////////////////
 import MainDashbaord from "../suvaPages/Dashboard"
@@ -567,14 +567,14 @@ const publicRoutes = [
 
 let routes = [];
 
-if (sessionStorage.getItem('authUser')) {
-  if (JSON.parse(sessionStorage.getItem('authUser')).role === 'vendor') {
+if (localStorage.getItem('authUser')) {
+  if (JSON.parse(localStorage.getItem('authUser')).role === 'vendor') {
     authProtectedRoutes.forEach((x) => {
       if (x.path.includes('vendor')) {
         routes.push(x)
       }
     })
-  } else if (JSON.parse(sessionStorage.getItem('authUser')).role === 'admin') {
+  } else if (JSON.parse(localStorage.getItem('authUser')).role === 'admin') {
     authProtectedRoutes.forEach((x) => {
       if (x.path.includes('admin')) {
         routes.push(x)
@@ -584,5 +584,7 @@ if (sessionStorage.getItem('authUser')) {
 } else {
   routes = authProtectedRoutes
 }
+
+console.log(routes, 'rrrrrrr');
 
 export { routes, publicRoutes };

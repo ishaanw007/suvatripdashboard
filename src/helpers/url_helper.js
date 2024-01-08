@@ -3,6 +3,12 @@ export const POST_FAKE_REGISTER = "/auth/signup";
 
 export const GET_HOTEL_BY_ID = "/dashboard/get-hotel-by-id";
 
+export const GET_ALL_HOTELS = "/dashboard/get-hotels";
+
+export const APPROVE_HOTEL = "/dashboard/approve-hotel";
+
+export const GET_HOTEL_BY_VENDOR_ID = "/dashboard/get-hotel-by-vendor-id";
+
 export const ROOMS = "/room";
 
 export const PROMOTION = "/promotion";

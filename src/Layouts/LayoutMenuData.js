@@ -139,7 +139,7 @@ const Navdata = () => {
       history("/widgets");
       document.body.classList.add("twocolumn-panel");
     }
-   
+
     if (iscurrentState !== "Landing") {
       setIsLanding(false);
     }
@@ -166,12 +166,12 @@ const Navdata = () => {
       isHeader: true,
     },
 
-//////////////////////////////////////suvatrip
+    //////////////////////////////////////suvatrip
 
-// {
-//   label: "SUVA TRIP START",
-//   isHeader: true,
-// },
+    // {
+    //   label: "SUVA TRIP START",
+    //   isHeader: true,
+    // },
     {
       id: "Dashboard",
       label: "Dashboard",
@@ -217,7 +217,7 @@ const Navdata = () => {
         //   link: "/rates-availibility/rateplan",
         //   parentId: "rates",
         // },
-    
+
       ],
     },
     {
@@ -311,7 +311,7 @@ const Navdata = () => {
           link: "/vendor/property/description",
           parentId: "property",
         },
-    
+
       ],
     },
     {
@@ -365,7 +365,7 @@ const Navdata = () => {
           link: "/vendor/finance/financeoverview",
           parentId: "Finance",
         },
-    
+
       ],
     },
 
@@ -1732,27 +1732,29 @@ const Navdata = () => {
 
   let finalItems = []
 
-  if(JSON.parse(sessionStorage.getItem('authUser')).role==='vendor') {
-    menuItems.forEach((x) => {
-      if(x.isHeader) {
-        finalItems.push(x)
-      } else {
-        if(x.link.includes('vendor')) {
+  if (localStorage.getItem('authUser')) {
+    if (JSON.parse(localStorage.getItem('authUser')).role === 'vendor') {
+      menuItems.forEach((x) => {
+        if (x.isHeader) {
           finalItems.push(x)
+        } else {
+          if (x.link.includes('vendor')) {
+            finalItems.push(x)
+          }
         }
-      }
-    })
-  } else if(JSON.parse(sessionStorage.getItem('authUser')).role==='admin') {
-    menuItems.forEach((x) => {
-      if(x.isHeader) {
-        finalItems.push(x)
-      } else {
-        if(x.link.includes('admin')) {
+      })
+    } else if (JSON.parse(localStorage.getItem('authUser')).role === 'admin') {
+      menuItems.forEach((x) => {
+        if (x.isHeader) {
           finalItems.push(x)
+        } else {
+          if (x.link.includes('admin')) {
+            finalItems.push(x)
+          }
         }
-      }
-    })
-  }
+      })
+    }
+  } 
 
   return <React.Fragment>{finalItems}</React.Fragment>;
 };

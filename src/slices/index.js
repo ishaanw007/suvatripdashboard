@@ -13,6 +13,8 @@ import ReviewsReducer from "./reviews/reducer";
 
 import InboxReducer from "./inbox/reducer";
 
+import allHotelsReducer from './allHotels/reducer'
+
 // Authentication
 import LoginReducer from "./auth/login/reducer";
 import AccountReducer from "./auth/register/reducer";
@@ -110,7 +112,8 @@ const rootReducer = combineReducers({
     FileManager: FileManagerReducer,
     Todos: TodosReducer,
     Jobs: JobReducer,
-    APIKey: APIKeyReducer
+    APIKey: APIKeyReducer,
+    Hotels: allHotelsReducer
 });
 
 export default rootReducer;

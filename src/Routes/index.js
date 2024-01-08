@@ -8,8 +8,30 @@ import VerticalLayout from "../Layouts/index";
 //routes
 import { routes, publicRoutes } from "./allRoutes";
 import { AuthProtected } from './AuthProtected';
+import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from "reselect";
+
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
+
+    const navigate = useNavigate();
+
+
+    const logoutData = createSelector(
+        (state) => state.Login.isUserLogout,
+        (isUserLogout) => isUserLogout
+    );
+    // Inside your component
+    const isUserLogout = useSelector(logoutData);
+
+    useEffect(() => {
+        if (isUserLogout) {
+            console.log(isUserLogout);
+            navigate('/login')
+        }
+    }, [])
+
     return (
         <React.Fragment>
             <Routes>
